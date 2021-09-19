@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% block content %}
+
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 card mb-4  mt-3 left  top">
+        <div class="card-body">
+          <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
+          <p class=" text-muted"><a href="{% url 'profile' post.author.username %}">{{ post.author }}</a> | {{ post.created_on }}</p>
+          <p class="card-text ">{{ post.content | safe }} </p>
+
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="like">
+            <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                </svg>
+            </button>
+        </form>
+        <div class="ml-3">
+            </i>{{ post.likes_post.all.count }} people like this
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <br>
+    
+    <div class="col-md-8 card mb-4  mt-3 ">
+
+        <div class="card-body">
+          <!-- comments -->
+          <h2>{{ comments.count }} comments</h2>
+  
+          {% for comment in comments %}
+          <div class="comments" style="padding: 10px;">
+            <p class="font-weight-bold">
+                <div class="card-body">
+              {{ comment.name }}
+              <span class=" text-muted font-weight-normal">
+                {{ comment.created_on }}
+              </span>
+            </p>
+            {{ comment.body | linebreaks }}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="like_comment" value="{{ comment.id }}">
+              <button type="submit" class="btn btn-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-heart-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd"
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                  </svg>
+              </button>
+          </form>
+          </i>{{ comment.likes_comment.all.count }} people like this
+            <!-- <form method="post" style="margin-top: 1.3em;" action='delete'>
+                {% csrf_token %}
+                <button name="delete" type="submit" class="btn btn-primary  btn-lg">Delete</button>
+              </form> -->
+        </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-8 card mb-4  mt-3 ">
+        <div class="card-body">
+          
+        
+          {% load crispy_forms_tags %}
+          
+
+<form method="post" style="margin-top: 1.3em;">
+          {{ comment_form | crispy }}
+          {% csrf_token %}
+          <button name="comments" type="submit" class="btn btn-primary  btn-lg">Submit</button>
+ </form>
+ 
+         
+        </div>
+      </div>
+
+
+
+{% endblock content %}
